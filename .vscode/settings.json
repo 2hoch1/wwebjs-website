@@ -30,12 +30,14 @@
     "editor.formatOnSave": true
   },
   "search.exclude": {
-    "node_modules": true,
-    "dist": true,
-    "coverage": true
+    "**/node_modules": false,
+    "coverage": true,
+    "dist": true
   },
   "files.exclude": {
     "node_modules": true,
     ".git": true
-  }
+  },
+  "prettier.withNodeModules": false,
+  "markdown.extension.completion.respectVscodeSearchExclude": true
 }
