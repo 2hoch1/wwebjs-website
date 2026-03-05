@@ -1,0 +1,16 @@
+{
+  "title": "Guide",
+  "description": "The description of root folder (optional)",
+  "icon": "BookOpen",
+  "pages": [
+    "faq",
+    "---Introduction---",
+    "index",
+    "what-is-wwebjs",
+    "disclaimer",
+    "---Setup---",
+    "requirements",
+    "getting-started"
+  ],
+  "root": true
+}

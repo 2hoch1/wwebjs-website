@@ -1,0 +1,235 @@
+---
+title: Linters and Code Quality
+description: Set up ESLint and Prettier for code quality
+---
+
+Linters and formatters help maintain code quality and consistency in your project.
+
+## ESLint - Code Quality
+
+ESLint helps find and fix problems in your JavaScript code.
+
+### Installation
+
+```bash
+npm install --save-dev eslint
+npx eslint --init
+```
+
+Follow the interactive setup to configure ESLint for your project.
+
+### Basic Configuration
+
+Create `.eslintrc.json`:
+
+```json
+{
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "no-console": "warn",
+    "no-unused-vars": "warn",
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"]
+  }
+}
+```
+
+### Usage
+
+Check your code:
+
+```bash
+npx eslint src/
+```
+
+Fix automatically:
+
+```bash
+npx eslint src/ --fix
+```
+
+### Common Rules
+
+- `no-console`: Warn about console.log statements
+- `no-unused-vars`: Warn about unused variables
+- `semi`: Require semicolons
+- `quotes`: Enforce single or double quotes
+- `indent`: Enforce indentation style
+
+## Prettier - Code Formatting
+
+Prettier automatically formats your code for consistency.
+
+### Installation
+
+```bash
+npm install --save-dev prettier
+```
+
+### Basic Configuration
+
+Create `.prettierrc.json`:
+
+```json
+{
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "useTabs": false,
+  "printWidth": 80
+}
+```
+
+### Usage
+
+Format a file:
+
+```bash
+npx prettier --write src/index.js
+```
+
+Format all files:
+
+```bash
+npx prettier --write src/
+```
+
+Check formatting:
+
+```bash
+npx prettier --check src/
+```
+
+## Setup Scripts in package.json
+
+Add convenient scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/"
+  }
+}
+```
+
+Now you can run:
+
+```bash
+npm run lint          # Check for issues
+npm run lint:fix      # Fix issues
+npm run format        # Format code
+npm run format:check  # Check formatting
+```
+
+## Configure Git Hooks with Husky
+
+Automatically run linters before committing:
+
+```bash
+npm install --save-dev husky
+npx husky install
+npx husky add .husky/pre-commit "npm run lint:fix && npm run format"
+```
+
+Now ESLint and Prettier run automatically before each commit.
+
+## Popular ESLint Plugins
+
+Install additional plugins for more checks:
+
+### For Node.js
+
+```bash
+npm install --save-dev eslint-plugin-node
+```
+
+Update `.eslintrc.json`:
+
+```json
+{
+  "extends": ["eslint:recommended", "plugin:node/recommended"]
+}
+```
+
+### For Security
+
+```bash
+npm install --save-dev eslint-plugin-security
+```
+
+## VS Code Integration
+
+Install the ESLint and Prettier extensions in VS Code:
+
+- ESLint extension by Dirk Baeumer
+- Prettier - Code formatter by Prettier
+
+Add to your `.vscode/settings.json`:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+Now code auto-formats on save.
+
+## Best Practices
+
+1. **Start simple**: Use recommended configurations first
+2. **Be consistent**: Apply same rules to all files
+3. **Team agreement**: Discuss rules with team members
+4. **Document**: Document any custom rules
+5. **Gradual fixes**: Don't fix all issues at once on large projects
+6. **Pre-commit**: Use hooks to prevent bad commits
+
+## Troubleshooting
+
+### ESLint Not Finding Files
+
+```bash
+npx eslint src/ --debug
+```
+
+### Prettier Conflicts with ESLint
+
+Install both compatible:
+
+```bash
+npm install --save-dev eslint-config-prettier
+```
+
+Update `.eslintrc.json`:
+
+```json
+{
+  "extends": ["eslint:recommended", "prettier"]
+}
+```
+
+### Git Hook Not Running
+
+Ensure Husky is installed:
+
+```bash
+npx husky install
+```
+
+## Next Steps
+
+With linting configured, you're ready to start building your bot with confidence. Check out [core concepts](../core-concepts/client) to learn more.

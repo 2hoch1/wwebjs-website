@@ -1,0 +1,142 @@
+---
+title: Getting Started
+description: Your guide to building WhatsApp bots with WWebJS
+icon: Rocket
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
+Welcome to the WWebJS guide. This comprehensive resource will help you build WhatsApp bots and automation tools using Node.js and more.
+
+## What You'll Learn
+
+This guide covers everything from basic setup to advanced bot features:
+
+- Setting up your development environment
+- Creating your first WhatsApp bot
+- Handling messages and media
+- Working with groups and channels
+- Best practices and deployment strategies
+
+## Getting Started Path
+
+Start here if you're new to WWebJS:
+
+1. **[What is WWebJS?](./what-is-wwebjs)** - Understand what this library does
+2. **[Requirements](./getting-started/requirements)** - Check prerequisites
+3. **[Installation](./getting-started/installation)** - Install WWebJS
+4. **[Project Setup](./getting-started/project-structure)** - Organize your code
+5. **[Application Setup](./getting-started/app-setup)** - Build your first bot
+
+## Quick Start
+
+The fastest way to get a working bot:
+
+```javascript
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+
+const client = new Client({ authStrategy: new LocalAuth() });
+
+client.on('qr', (qr) => qrcode.generate(qr, { small: true }));
+client.on('ready', () => console.log('Bot ready!'));
+client.on('message_create', (msg) => {
+  if (msg.body === '!ping') msg.reply('Pong!');
+});
+
+client.initialize();
+```
+
+Install dependencies:
+
+```bash
+npm install whatsapp-web.js puppeteer qrcode-terminal
+```
+
+Run it:
+
+```bash
+node index.js
+```
+
+Scan the QR code with your WhatsApp phone and start messaging your bot.
+
+## Important Notice
+
+Before proceeding, please read the [Disclaimer](./disclaimer) regarding:
+
+- Account safety and blocking risks
+- Terms of service compliance
+- Official alternatives
+- Responsible usage
+
+## Recommended Learning Resources
+
+If you need to brush up on JavaScript basics:
+
+- [JavaScript.info](https://javascript.info/) - Modern JavaScript tutorials
+- [Node.js Documentation](https://nodejs.org/en/docs/)
+- [W3Schools Node.js Guide](https://www.w3schools.com/nodejs/)
+
+## Features You Can Build
+
+With WWebJS, you can create:
+
+- Text and media message handlers
+- Automated responses and workflows
+- Group management tools
+- Media processing and archiving
+- Message scheduling
+- Custom command systems
+- Integration with external APIs
+- Real-time notifications
+
+## Development Tools
+
+We recommend setting up:
+
+- **ESLint** - Catch code errors
+- **Prettier** - Format code automatically
+- **Git** - Version control
+- **VS Code** - Code editor
+
+Learn about [Linters and Code Quality](./getting-started/linters).
+
+## Community and Support
+
+Join our active community:
+
+- [Discord Server](https://discord.gg/wyKybbF) - Get help and chat with developers
+- [GitHub Issues](https://github.com/pedroslopez/whatsapp-web.js) - Report bugs
+- [FAQ](./troubleshooting/faq) - Common questions answered
+
+## What's Next?
+
+Choose your learning path:
+
+<Cards>
+  <Card 
+    title="First Time Setup"
+    description="Install WWebJS and create your first bot in 5 minutes"
+    href="./getting-started/requirements"
+  />
+  <Card 
+    title="Understand the Basics"
+    description="Learn about the client lifecycle and authentication"
+    href="./what-is-wwebjs"
+  />
+  <Card 
+    title="Get Help"
+    description="Find answers to common questions and issues"
+    href="./troubleshooting/faq"
+  />
+  <Card 
+    title="Full Documentation"
+    description="Explore complete API documentation"
+    href="https://docs.wwebjs.dev"
+  />
+</Cards>
+
+## Disclaimer
+
+This project is not affiliated with WhatsApp or Meta. Always use responsibly and respect WhatsApp's terms of service. Your account may be at risk of suspension if misused. For critical applications, use [official APIs](https://developers.facebook.com/docs/whatsapp/) instead.

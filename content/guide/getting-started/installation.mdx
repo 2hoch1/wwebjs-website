@@ -1,0 +1,99 @@
+---
+title: Installation
+description: Step-by-step installation guide for WWebJS
+---
+
+## Prerequisites
+
+Make sure you have [Node.js](https://nodejs.org/) version 16.0 or higher installed on your system.
+
+Verify your installation:
+
+```bash
+node --version
+npm --version
+```
+
+## Create a New Project
+
+If you don't have an existing Node.js project, create one:
+
+```bash
+mkdir my-whatsapp-bot
+cd my-whatsapp-bot
+npm init -y
+```
+
+## Install WWebJS
+
+Install the latest version of whatsapp-web.js from npm:
+
+```bash
+npm install whatsapp-web.js
+```
+
+You may also need to install Puppeteer separately:
+
+```bash
+npm install puppeteer
+```
+
+## Optional: Development Dependencies
+
+For development, consider installing these useful tools:
+
+```bash
+npm install --save-dev nodemon
+npm install --save-dev eslint
+npm install --save-dev prettier
+```
+
+- **nodemon**: Automatically restart your bot when files change
+- **eslint**: Find and fix code issues
+- **prettier**: Format code consistently
+
+## Verify Installation
+
+Create a simple test file to verify everything works:
+
+```bash
+cat > test.js << 'EOF'
+const { Client } = require('whatsapp-web.js');
+console.log('WWebJS installed successfully!');
+EOF
+
+node test.js
+```
+
+You should see the success message without errors.
+
+## Update your package.json
+
+Edit your `package.json` to add a start script:
+
+```json
+{
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  }
+}
+```
+
+## Next Steps
+
+Now that WWebJS is installed, you can:
+
+1. Learn about [Application Setup](./app-setup) to configure your first bot
+2. Explore the [Project Structure](./project-structure) for organizing your code
+3. Check out the core concepts in the documentation
+
+## Troubleshooting
+
+Having issues? Common problems and solutions:
+
+- **Puppeteer installation fails**: Make sure you have 512MB+ disk space
+- **Module not found**: Run `npm install` again in your project directory
+- **Permission errors**: Try running with `sudo` or check your Node.js installation
+
+Still stuck? Ask in the [Discord community](https://discord.gg/wyKybbF)

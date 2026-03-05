@@ -1,0 +1,188 @@
+---
+title: Application Setup
+description: Set up your first WWebJS bot application
+---
+
+## No Bot Token Required
+
+Unlike Discord or Telegram, WhatsApp does not have an official bot API requiring tokens. WWebJS instead uses WhatsApp Web to connect to your personal account. This means:
+
+- No need to create a separate bot account
+- Use your existing WhatsApp account
+- Full access to all WhatsApp Web features
+- Authentication happens through QR code scanning
+
+## Create Your First Bot
+
+Let's create a simple bot that responds to messages.
+
+### Step 1: Create the Main File
+
+Create `src/index.js`:
+
+```javascript
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+
+const client = new Client({
+  authStrategy: new LocalAuth(),
+});
+
+client.on('qr', (qr) => {
+  console.log('Scan the QR code below with your phone:');
+  qrcode.generate(qr, { small: true });
+});
+
+client.on('ready', () => {
+  console.log('Bot is ready!');
+});
+
+client.on('message_create', async (message) => {
+  if (message.body === 'hello') {
+    message.reply('Hi there!');
+  }
+});
+
+client.initialize();
+```
+
+### Step 2: Install QR Code Display
+
+For easier QR code scanning:
+
+```bash
+npm install qrcode-terminal
+```
+
+### Step 3: Run Your Bot
+
+```bash
+npm start
+```
+
+### Step 4: Authenticate
+
+1. Open your terminal where the bot is running
+2. Scan the QR code with your WhatsApp phone
+3. Approve the login request on your phone
+4. Bot is now connected and listening for messages
+
+## Authentication Strategies
+
+WWebJS offers different authentication methods:
+
+### LocalAuth (Recommended for Development)
+
+Stores session data locally on your machine:
+
+```javascript
+const { LocalAuth } = require('whatsapp-web.js');
+
+const client = new Client({
+  authStrategy: new LocalAuth(),
+});
+```
+
+Pros: Simple, no external dependencies
+Cons: Session stored only on that machine
+
+### NoAuth
+
+No session storage (logs out each restart):
+
+```javascript
+const client = new Client();
+```
+
+Pros: Fresh login each time
+Cons: Need to scan QR code every restart
+
+### RemoteAuth
+
+Stores session on a server (advanced):
+
+For production deployments where you need persistent sessions across machines.
+
+## Handle Different Message Types
+
+Respond to different message types:
+
+```javascript
+client.on('message_create', async (message) => {
+  // Check message type
+  if (message.type === 'chat') {
+    message.reply('Text message received');
+  } else if (message.type === 'image') {
+    message.reply('Image received');
+  } else if (message.type === 'video') {
+    message.reply('Video received');
+  } else if (message.type === 'audio') {
+    message.reply('Audio received');
+  }
+});
+```
+
+## Respond to Specific Users
+
+Filter messages from certain users:
+
+```javascript
+client.on('message_create', async (message) => {
+  const contact = await message.getContact();
+  
+  if (contact.name === 'Important Person') {
+    message.reply('Hi! Thanks for messaging');
+  }
+});
+```
+
+## Handle Errors Gracefully
+
+Always include error handling:
+
+```javascript
+client.on('error', (error) => {
+  console.error('Client error:', error);
+});
+
+client.on('disconnected', (reason) => {
+  console.log('Client disconnected:', reason);
+});
+
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled rejection:', error);
+});
+```
+
+## Common Issues and Solutions
+
+### QR Code Not Showing
+
+- Make sure terminal supports UTF-8
+- Try: `npm install qrcode`
+
+### Bot Not Responding
+
+- Verify exact message text matches
+- Use `.toLowerCase()` for case-insensitive matching
+- Check bot is not muted in that chat
+
+### Session Expires Frequently
+
+- Use LocalAuth instead of NoAuth
+- Check your internet connection
+- Look for WhatsApp security alerts on your phone
+
+## Next Steps
+
+Now you have a working bot! Learn more about:
+
+- [Handling Messages](../common-tasks/listening-messages)
+- [Sending Media](../common-tasks/sending-media)
+- [Working with Groups](../common-tasks/groups)
+
+## Need Help?
+
+- Check [Troubleshooting](../troubleshooting/common-errors)
+- Join [Discord community](https://discord.gg/wyKybbF)
+- Review [FAQ](../troubleshooting/faq)

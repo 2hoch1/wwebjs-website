@@ -1,0 +1,153 @@
+---
+title: Project Structure
+description: Recommended folder and file organization
+---
+
+## Recommended Directory Layout
+
+A well-organized project structure makes your code easier to maintain and scale. Here's a recommended layout for a WWebJS bot:
+
+```
+my-bot/
+├── src/
+│   ├── index.js              # Main entry point
+│   ├── client.js             # Client initialization
+│   ├── handlers/             # Event handlers
+│   │   ├── message.js
+│   │   ├── auth.js
+│   │   └── disconnected.js
+│   ├── commands/             # Command handlers
+│   │   ├── help.js
+│   │   ├── ping.js
+│   │   └── info.js
+│   ├── utils/                # Utility functions
+│   │   ├── logger.js
+│   │   ├── validators.js
+│   │   └── formatters.js
+│   └── config/               # Configuration files
+│       └── settings.js
+├── .env                       # Environment variables
+├── .env.example              # Example env template
+├── .gitignore                # Git ignore rules
+├── package.json              # Dependencies
+└── README.md                 # Project documentation
+```
+
+## Detailed Description
+
+### Root Level Files
+
+- **package.json**: Defines your project dependencies and scripts
+- **.env**: Stores sensitive data like API keys (never commit this!)
+- **.env.example**: Template showing what env variables are needed
+- **.gitignore**: Prevents committing node_modules, .env, etc.
+- **README.md**: Documentation for your project
+
+### src/index.js
+
+Your main entry point that:
+
+- Imports and initializes the WWebJS client
+- Loads event handlers
+- Starts the bot
+
+Example:
+
+```javascript
+const { Client, LocalAuth } = require('whatsapp-web.js');
+
+const client = new Client({
+  auth: new LocalAuth(),
+});
+
+client.on('ready', () => console.log('Bot is ready'));
+client.on('message_create', require('./handlers/message'));
+
+client.initialize();
+```
+
+### src/handlers/
+
+Contains event handler functions for:
+
+- **message.js**: Handles incoming messages
+- **auth.js**: Handles authentication events
+- **disconnected.js**: Handles disconnections and errors
+
+Each handler is a function that processes specific events.
+
+### src/commands/
+
+Organize command logic by purpose:
+
+- **help.js**: Shows available commands
+- **ping.js**: Simple response command
+- **info.js**: Returns bot information
+
+This makes commands easy to find and modify.
+
+### src/utils/
+
+Reusable utility functions:
+
+- **logger.js**: Logging wrapper for consistency
+- **validators.js**: Input validation functions
+- **formatters.js**: Format messages and data
+
+### src/config/
+
+Centralized configuration:
+
+- **settings.js**: Bot settings and constants
+- Database connection info
+- Feature flags
+
+## Environment Variables
+
+Create a `.env` file for sensitive data:
+
+```bash
+WHATSAPP_SESSION_ID=your-session-id
+DEBUG=true
+LOG_LEVEL=info
+```
+
+Create `.env.example` for documentation:
+
+```bash
+WHATSAPP_SESSION_ID=your-session-id
+DEBUG=true
+LOG_LEVEL=info
+```
+
+## Scalability Tips
+
+As your project grows:
+
+1. Separate features into different files
+2. Use constants and config files instead of hardcoded values
+3. Create reusable utility functions
+4. Group related handlers together
+5. Use a database for persistent data
+6. Implement proper logging and error handling
+
+## Example with Commands
+
+```
+commands/
+├── admin/
+│   ├── ban.js
+│   └── kick.js
+├── fun/
+│   ├── joke.js
+│   └── quote.js
+└── info/
+    ├── help.js
+    └── stats.js
+```
+
+Each command file exports a function that handles that specific command, making it easy to add or modify commands.
+
+## Next Steps
+
+Learn how to set up your application properly in [Application Setup](./app-setup)

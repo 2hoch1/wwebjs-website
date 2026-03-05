@@ -1,0 +1,243 @@
+---
+title: FAQ
+description: Frequently asked questions about whatsapp-web.js development.
+icon: CircleQuestionMark
+---
+
+# Frequently Asked Questions
+
+## Installation & Setup
+
+### Q: Do I need WhatsApp Business?
+**A:** No, whatsapp-web.js works with regular WhatsApp accounts. However, WhatsApp may restrict automated access, so be mindful of their Terms of Service.
+
+### Q: Can I use multiple accounts at once?
+**A:** Yes, run multiple bot instances with different auth strategies (RemoteAuth with database works best for this).
+
+### Q: What's the difference between headless and GUI mode?
+**A:** 
+- **Headless:** No visible browser, lower resource usage, limited video support
+- **GUI:** Shows browser window, useful for debugging, better media support
+
+### Q: Can I run this on a VPS without display?
+**A:** Yes, use headless mode. For video support, use `xvfb-run` on Linux to provide a virtual display.
+
+## Authentication
+
+### Q: Do I need to scan QR code every time?
+**A:** No, use LocalAuth (local file storage) or RemoteAuth (database) for session persistence.
+
+### Q: What's the difference between NoAuth, LocalAuth, and RemoteAuth?
+**A:**
+- **NoAuth:** Session lost on restart (testing only)
+- **LocalAuth:** Session saved to local `.wwebjs_auth` folder (single instance)
+- **RemoteAuth:** Session in cloud database (multiple instances)
+
+### Q: How do I handle QR code when running on server?
+**A:** Use RemoteAuth with database instead. QR code authentication requires a display.
+
+### Q: My session keeps expiring
+**A:** Ensure you're using an appropriate auth strategy with proper backup. Use RemoteAuth for stability.
+
+## Messages & Operations
+
+### Q: How do I filter messages by sender?
+**A:** Use `msg.from` property:
+```javascript
+if (msg.from === '1234567890@c.us') {
+    // Handle message
+}
+```
+
+### Q: Can I send formatted text (bold, italic)?
+**A:** Yes:
+```javascript
+await msg.reply('*bold* _italic_ ~strikethrough~');
+```
+
+### Q: How do I add a caption to media?
+**A:** Pass caption as second argument:
+```javascript
+const media = MessageMedia.fromFilePath('./image.jpg');
+await msg.reply(media, 'This is my caption');
+```
+
+### Q: Why can't I send videos?
+**A:** Requires headless=false and proper Chrome/Chromium. See [Platform-Specific Issues](/guide/troubleshooting/platform-specific).
+
+### Q: How do I download media from messages?
+**A:** Use `downloadMedia()`:
+```javascript
+if (msg.hasMedia) {
+    const media = await msg.downloadMedia();
+    fs.writeFileSync('file.jpg', media.data, 'base64');
+}
+```
+
+### Q: Can I edit or delete messages?
+**A:** Yes, but only recent messages (< 2 days):
+```javascript
+await msg.edit('Edited text');
+await msg.delete(true);  // Delete for everyone
+```
+
+## Groups
+
+### Q: How do I create a group?
+**A:** Use `client.createGroup()`:
+```javascript
+const group = await client.createGroup('Group Name', ['1234567890@c.us']);
+```
+
+### Q: Can I remove someone from a group?
+**A:** Yes, if you're admin:
+```javascript
+await group.removeParticipants(['1234567890@c.us']);
+```
+
+### Q: How do I check if I'm an admin?
+**A:** Check participant roles:
+```javascript
+const isAdmin = group.participants.find(p => p.id === myId)?.isAdmin;
+```
+
+### Q: Can I restrict messages to admins only?
+**A:** Yes:
+```javascript
+await group.setMessagesAdminsOnly(true);
+```
+
+## Performance & Scaling
+
+### Q: My bot is slow with many messages
+**A:** Implement message queuing and database indexing for better performance.
+
+### Q: How many bots can I run on one server?
+**A:** Depends on server resources. Each bot needs ~200MB+ RAM for browser.
+
+### Q: Does whatsapp-web.js work with Serverless (Lambda, Vercel)?
+**A:** Challenging but possible. Use RemoteAuth + database. See [Deployment](/guide/advanced-topics/deployment).
+
+### Q: How do I handle rate limiting?
+**A:** Add delays between operations:
+```javascript
+await msg.reply('Message 1');
+await new Promise(r => setTimeout(r, 1000));
+await msg.reply('Message 2');
+```
+
+## Errors & Debugging
+
+### Q: "Puppeteer failed to launch"
+**A:** Install system dependencies. See [Platform-Specific Issues](/guide/troubleshooting/platform-specific).
+
+### Q: "Cannot find module 'whatsapp-web.js'"
+**A:** Run `npm install whatsapp-web.js`
+
+### Q: "Connection refused" errors
+**A:** WhatsApp disconnected you. This is normal. Implement reconnection logic.
+
+### Q: How do I debug my bot?
+**A:** Set `headless: false` to see browser, add console.log statements, use VS Code debugger.
+
+### Q: "Session invalid" on restart
+**A:** Use proper auth strategy (LocalAuth or RemoteAuth) instead of NoAuth.
+
+## Best Practices
+
+### Q: Should I use `await`?
+**A:** Yes, always. whatsapp-web.js is heavily asynchronous:
+```javascript
+const contact = await msg.getContact();  // Correct
+const contact = msg.getContact();         // Wrong
+```
+
+### Q: What's the recommended way to structure my bot?
+**A:** Split into modules:
+```
+bot/
+├── handlers/
+│   ├── message-handler.js
+│   ├── command-handler.js
+│   └── event-handler.js
+├── models/
+│   ├── user.js
+│   └── conversation.js
+├── utils/
+│   ├── logger.js
+│   └── config.js
+└── index.js
+```
+
+### Q: Should I store sessions in the repository?
+**A:** No, use `.gitignore`:
+```
+# .gitignore
+.wwebjs_auth/
+.env
+node_modules/
+```
+
+### Q: How should I handle user input?
+**A:** Always validate:
+```javascript
+const userId = msg.body.trim();
+if (!userId.match(/^\d+@c\.us$/)) {
+    await msg.reply('Invalid format');
+    return;
+}
+```
+
+## Integration
+
+### Q: Can I use this with Express/Node server?
+**A:** Yes, run bot and server together:
+```javascript
+const express = require('express');
+const { Client } = require('whatsapp-web.js');
+
+const app = express();
+const client = new Client();
+
+client.initialize();
+
+app.get('/api/status', (req, res) => {
+    res.json({ ready: !!client.info });
+});
+
+app.listen(3000);
+```
+
+### Q: Can I use this with databases?
+**A:** Yes, recommended for production. See [Database Persistence](/guide/advanced-topics/database-persistence).
+
+### Q: How do I deploy this?
+**A:** Docker, VPS, or serverless. See [Deployment](/guide/advanced-topics/deployment).
+
+## Legal & Ethics
+
+### Q: Is this legal to use?
+**A:** whatsapp-web.js itself is legal, but using it may violate WhatsApp's Terms of Service. Use responsibly.
+
+### Q: Will my account get banned?
+**A:** Possible if used excessively or for spam. WhatsApp actively restricts automated access.
+
+### Q: Can I use this for commercial purposes?
+**A:** Technically yes, but be aware of WhatsApp's policies. Consider using their official API for business use.
+
+### Q: What should I do if my account gets banned?
+**A:** Unfortunately, WhatsApp bans are permanent. Use a different account and adjust your bot's behavior.
+
+## Still Have Questions?
+
+- Check [Common Errors](/guide/troubleshooting/common-errors) for specific error messages
+- See [Platform-Specific Issues](/guide/troubleshooting/platform-specific) for your OS
+- Visit [GitHub Issues](https://github.com/pedroslopez/whatsapp-web.js/issues)
+- Check [API Reference](https://docs.wwebjs.dev/)
+- Ask on community forums or Discord
+
+## Next Steps
+
+- Look up [Common Errors](/guide/troubleshooting/common-errors) if you're getting specific messages
+- Check [Platform-Specific Issues](/guide/troubleshooting/platform-specific) for OS-related problems
+- Review [Error Handling](/guide/advanced-topics/error-handling) for robust code

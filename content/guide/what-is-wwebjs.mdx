@@ -1,0 +1,48 @@
+---
+title: What is WWebJS?
+description: Understanding whatsapp-web.js and its capabilities
+icon: MessageCircleQuestionMark
+---
+
+WWebJS (also known as `whatsapp-web.js`) is a powerful Node.js library that allows developers to interact with WhatsApp Web directly. It enables the creation of automation tools by simulating a WhatsApp Web client and exposing its core features to your application.
+
+## Why use WWebJS?
+
+WWebJS is designed to be easy to use and simple to integrate into existing projects. Its high-level API abstracts the complexities of WhatsApp Web, allowing you to focus on building your applications without worrying about the underlying implementation details.
+
+Key advantages include:
+
+- No official API key or business account required
+- Full WhatsApp Web feature access
+- Simple, intuitive Node.js API
+- Support for all message types and media
+- Easy integration with existing projects
+- Active community support
+
+## How it Works
+
+WWebJS operates by leveraging the WhatsApp Web interface, the web-based version of WhatsApp that runs in a browser. The library works by:
+
+1. Launching WhatsApp Web inside a managed Puppeteer session using a headless browser
+2. Mirroring user interactions programmatically
+3. Calling internal WhatsApp Web functions directly through the page context
+4. Handling session management and authentication automatically
+
+This approach gives you programmatic access to nearly all features available on WhatsApp Web, making it powerful for automation and integration.
+
+## What Can You Build?
+
+With WWebJS, you can create:
+
+- WhatsApp chatbots for customer support
+- Message automation and scheduling
+- Delivery notification systems
+- Alert and reminder services
+- Contact management tools
+- Media archiving and processing
+- Emergency communication systems
+- Integration bridges with other platforms
+
+## Official API Alternative
+
+Meta provides an official WhatsApp Business API through the Facebook Developer platform. For critical business applications, consider using the [official API](https://developers.facebook.com/docs/whatsapp/) or managed services like [Twilio](https://www.twilio.com/en-us/messaging/channels/whatsapp).
