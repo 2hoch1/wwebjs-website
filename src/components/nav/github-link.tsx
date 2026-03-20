@@ -36,15 +36,16 @@ export function GitHubLink() {
 }
 
 async function StarsCount() {
+  let formatted: string | null = null
   try {
     const res = await fetch('https://api.github.com/repos/pedroslopez/whatsapp-web.js', {
       next: { revalidate: 86400 },
     })
     const json = await res.json()
     const count: number = json.stargazers_count
-    const formatted = count >= 1000 ? `${Math.round(count / 1000)}k` : String(count)
-    return <span className="text-xs text-muted-foreground tabular-nums">{formatted}</span>
+    formatted = count >= 1000 ? `${Math.round(count / 1000)}k` : String(count)
   } catch {
     return null
   }
+  return <span className="text-xs text-muted-foreground tabular-nums">{formatted}</span>
 }
