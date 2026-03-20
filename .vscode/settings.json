@@ -39,5 +39,8 @@
     ".git": true
   },
   "prettier.withNodeModules": false,
-  "markdown.extension.completion.respectVscodeSearchExclude": true
+  "markdown.extension.completion.respectVscodeSearchExclude": true,
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  }
 }

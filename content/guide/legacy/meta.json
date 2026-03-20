@@ -1,7 +1,6 @@
 {
-  "title": "Guide",
+  "title": "Legacy Guide",
   "description": "The description of root folder (optional)",
-  "icon": "BookOpen",
   "root": true,
   "pages": [
     "---Getting Started---",

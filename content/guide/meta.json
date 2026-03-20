@@ -1,7 +1,6 @@
 {
   "title": "Guide",
   "description": "The description of root folder (optional)",
-  "icon": "BookOpen",
   "pages": [
     "faq",
     "---Introduction---",
